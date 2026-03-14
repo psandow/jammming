@@ -4,6 +4,7 @@ import './App.css';
 import SearchBar from '../SearchBar/SearchBar';
 import SearchResults from '../SearchResults/SearchResults';
 import Playlist from '../Playlist/Playlist';
+import Spotify from '../../util/Spotify';
 
 function App() {
 
@@ -50,13 +51,28 @@ function App() {
     setPlaylistTracks(prevTracks => prevTracks.filter(savedTrack => savedTrack.id !== track.id)); // Remove the track from the playlist
   };
 
-  return (
+  const updatePlaylistName = (name) => {
+    setPlaylistName(name); // Update the playlist name
+  }
+
+  const savePlaylist = () => {
+    const trackURIs = playlistTracks.map(track => track.uri);
+    
+    console.log('Saving playlist with name:', trackURIs);
+  };
+    
+    const search = (term) => {
+      Spotify.getAccessToken();
+      console.log("Searching for:", term);
+    };
+    
+    return (
     <div>
       <h1>
         Ja<span className="highlight">mmm</span>ing
       </h1>
       <div className="App">
-        <SearchBar />
+        <SearchBar onSearch={search} />
         <div className="App-playlist">
           <SearchResults 
             searchResults={searchResults} 
@@ -64,7 +80,10 @@ function App() {
           <Playlist 
             playlistName={playlistName} 
             playlistTracks={playlistTracks} 
-            onRemove={removeTrack} />
+            onRemove={removeTrack} 
+            onNameChange={updatePlaylistName}
+            onSave={savePlaylist}
+            />
         </div>
       </div>
     </div>
