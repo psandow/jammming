@@ -56,15 +56,21 @@ function App() {
   }
 
   const savePlaylist = () => {
-    const trackURIs = playlistTracks.map(track => track.uri);
+    const trackUris = playlistTracks.map(track => track.uri);
     
-    console.log('Saving playlist with name:', trackURIs);
+    Spotify.savePlaylist(playlistName, trackUris).then(() => {
+      setPlaylistName('New Playlist'); // Reset the playlist name
+      setPlaylistTracks([]); // Clear the playlist tracks
+    });
+
+    console.log('Saving playlist with name:', trackUris);
   };
     
     const search = (term) => {
-      Spotify.getAccessToken();
-      console.log("Searching for:", term);
-    };
+    Spotify.search(term).then(results => {
+      setSearchResults(results); // Update the search results state with the results from Spotify
+    });
+  }
     
     return (
     <div>

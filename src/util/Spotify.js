@@ -63,9 +63,57 @@ const Spotify = {
         redirect_uri: redirectUri,
       });
 
-      window.location = `https://accounts.spotify.com/?${params.toString()}`;
+      window.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
     }
-  }
+  },
+  async search(term) {
+    const token = await this.getAccessToken();
+    const response = await fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+   
+  
+  const jsonResponse = await response.json();
+
+    if (!jsonResponse.tracks) {
+      return [];
+    }
+
+    return jsonResponse.tracks.items.map(track => ({
+      id: track.id,
+      name: track.name,
+      artist: track.artists[0].name, // Getting the first artist's name
+      album: track.album.name,
+      uri: track.uri
+    }));
+},
+async savePlaylist(name, trackUris) {
+  if (!name || !trackUris.length) {
+    return;
+  } 
+  const accessToken = await this.getAccessToken();
+    const headers = { 'Authorization': `Bearer ${accessToken}` };
+    let userId;
+
+    // Get user ID
+    const createPlaylistResponse = await fetch('https://api.spotify.com/v1/me/playlists', {
+    headers: { ...headers, 'Content-Type': 'application/json' },
+    method: 'POST',
+    body: JSON.stringify({ name: name })
+    });
+
+    const playlistResponseJson = await createPlaylistResponse.json();
+    const playlistId = playlistResponseJson.id;
+
+    return await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/items`, {
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        method: 'POST',
+        body: JSON.stringify({ uris: trackUris })
+    });
+}
 };
+
 
 export default Spotify;
