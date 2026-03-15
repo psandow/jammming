@@ -8,34 +8,11 @@ import Spotify from '../../util/Spotify';
 
 function App() {
 
-  const [searchResults, setSearchResults] = useState([
-    {
-      name: 'Example Song 1',
-      artist: 'Example Artist 1',
-      album: 'Example Album 1',
-      id: 1
-    },
-    {
-      name: 'Example Song 2',
-      artist: 'Example Artist 2',
-      album: 'Example Album 2',
-      id: 2
-    },
-    {
-      name: 'Example Song 3',
-      artist: 'Example Artist 3',
-      album: 'Example Album 3',
-      id: 3
-  }
-]);
+  const [searchResults, setSearchResults] = useState([]);
 
   const [playlistName, setPlaylistName] = useState("My New Playlist");
 
-  const [playlistTracks, setPlaylistTracks] = useState([
-    { name: 'Playlist Song 1', artist: 'Playlist Artist 1', album: 'Playlist Album 1', id: 4 },
-    { name: 'Playlist Song 2', artist: 'Playlist Artist 2', album: 'Playlist Album 2', id: 5 },
-    { name: 'Playlist Song 3', artist: 'Playlist Artist 3', album: 'Playlist Album 3', id: 6 }
-]);
+  const [playlistTracks, setPlaylistTracks] = useState([]);
 
 
 
